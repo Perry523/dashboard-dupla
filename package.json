@@ -11,6 +11,7 @@
         "migrate": "php artisan migrate",
         "migrate:fresh": "php artisan migrate:fresh",
         "logs": "tail -f storage/logs/laravel.log"
+        
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",
