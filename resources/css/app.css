@@ -190,3 +190,78 @@
     line-height: 1.2;
     color: var(--color-primary);
 }
+
+.background-pages {
+    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(255,255,255,0.1)),url(https://flowbite.s3.amazonaws.com/blocks/marketing-ui/authentication/background.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.secContent {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.presentation{
+    width: 100%;
+/*     display: flex;
+    align-items: center;
+    justify-content: start; */
+}
+
+.presentation > h1 {
+    font-size: 3rem;
+    color: var(--color-primary);
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.presentation > h2 {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.presentation > h3 {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: oblique;
+
+}
+
+.presentationBox{
+    align-items: start;
+    margin-top: 13vw; 
+}
+
+.interactBox {
+    min-width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.interact-background {
+    background-image: url(https://res.cloudinary.com/dv33g6nco/image/upload/c_crop,w_1450,h_1450/v1752787249/carteira_pedqvc.png);
+    background-size: cover;
+    height: 55vh;
+    width: 55vh;
+    position: absulute;
+}
+
+.interact-items{
+    position: relative;
+}
+
+.card-background-pages{
+    opacity: 0.94;
+    background-color: rgba(0, 0, 0, 1);
+    position: absolute;
+    padding: 2%;
+}
+.parent-card-background-pages {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.5);
+}

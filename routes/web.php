@@ -5,8 +5,12 @@ use App\Http\Controllers\PixController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
+Route::get('/home', function () {
     return Inertia::render('Welcome');
+})->name('welcome');
+
+Route::get('/', function () {
+    return Inertia::render('Home');
 })->name('home');
 
 Route::get('dashboard', [DashboardController::class, 'index'])
