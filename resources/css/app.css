@@ -165,3 +165,28 @@
         @apply bg-background text-foreground;
     }
 }
+
+.status-container{
+    height: 14%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.status-card{
+    height: 100%;
+    width: 100%;
+    max-width: 408px;
+    min-width: 67px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+}
+
+.status-value {
+    font-size: 3.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-primary);
+}
