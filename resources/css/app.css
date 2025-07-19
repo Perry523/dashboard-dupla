@@ -265,3 +265,46 @@
     position: relative;
     background-color: rgba(0, 0, 0, 0.5);
 }
+
+.gen-pc-container{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.pix-card{
+    color: var(--secondary);
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.pix-select-card > .p-multiselect-label-container > .p-multiselect-label {
+    flex-direction: column;
+}
+.pix-select-card{
+    display: flex;
+    justify-content: center;
+}
+
+.p-multiselect-header {
+    display: flex;
+    align-items: center;
+    padding: var(--p-multiselect-list-header-padding);
+    border: 1px solid;
+    border-radius: 25px;
+    padding-left: 6px !important;
+}
+.p-multiselect-list{
+    align-items: center;
+}
+
+.p-multiselect-option:hover {
+    border: 1px solid;
+}
+.p-chip{
+    gap: 5px !important;
+}
+.p-chip > svg{
+    color: red;
+}
