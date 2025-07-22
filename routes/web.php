@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PixController;
+use App\Http\Controllers\GeneratePixChargeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/home', function () {
+Route::get('/welcome', function () {
     return Inertia::render('Welcome');
 })->name('welcome');
 
@@ -16,6 +17,10 @@ Route::get('/', function () {
 Route::get('dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::get('GeneratePixCharge', [GeneratePixChargeController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('GeneratePixCharge');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('pix', [PixController::class, 'store'])->name('pix.store');
