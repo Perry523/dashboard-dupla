@@ -10,13 +10,6 @@ import Divider from 'primevue/divider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/composables/useInitials';
 
-
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Tag from 'primevue/tag';
-import Checkbox from 'primevue/checkbox';
-import ModalDialog from "./ModalDialog.vue";
-
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Gerar Cobrança Pix',

@@ -83,7 +83,7 @@ class PixController extends Controller
             'pix' => $pix->fresh(['user']),
         ]);
     }
-
+    
     public function qrcode(string $token)
     {
         $pix = Pix::where('token', $token)->firstOrFail();
