@@ -75,14 +75,12 @@ class PixController extends Controller
     {
         $pix = Pix::where('token', $token)->with('user')->firstOrFail();
 
-        if ($pix->isExpired() && $pix->status === Pix::STATUS_GENERATED) {
-            $pix->markAsExpired();
-        } elseif ($pix->status === Pix::STATUS_GENERATED) {
+        if ($pix->status === Pix::STATUS_GENERATED) {
             $pix->markAsPaid();
         }
 
         return Inertia::render('Pix/Confirm', [
-            'pix' => $pix->fresh(),
+            'pix' => $pix->fresh(['user']),
         ]);
     }
 
@@ -134,7 +132,7 @@ class PixController extends Controller
     public function checkStatusPixMonitoring(string $token): Response
     {
         $pix = Pix::where('token', $token)->with('user')->firstOrFail();
-        
+
         if ($pix->isExpired() && $pix->status === Pix::STATUS_GENERATED) {
             $pix->markAsExpired();
         } elseif ($pix->status === Pix::STATUS_PAID) {
