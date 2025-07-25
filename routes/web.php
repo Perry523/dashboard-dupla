@@ -22,6 +22,14 @@ Route::get('GeneratePixCharge', [GeneratePixChargeController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('GeneratePixCharge');
 
+Route::get('MyPixes', [GeneratePixChargeController::class, 'browsePixes'])
+    ->middleware(['auth', 'verified'])
+    ->name('MyPixes');
+
+Route::get('MyPixDetail', [GeneratePixChargeController::class, 'showPixDetail'])
+    ->middleware(['auth', 'verified'])
+    ->name('MyPixDetail');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('pix', [PixController::class, 'store'])->name('pix.store');
 });

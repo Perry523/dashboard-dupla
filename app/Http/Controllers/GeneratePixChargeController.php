@@ -30,4 +30,21 @@ class GeneratePixChargeController extends Controller
             'recentPix' => $recentPix,
         ]);
     }
+
+
+    public function browsePixes(): Response
+    {
+        return Inertia::render('MyPixes', []);
+    }
+    
+    /**
+     * Renders the detailed view for a specific Pix transaction.
+     * 
+     * @return Response Inertia response rendering the 'MyPixDetails' page
+     */
+    public function showPixDetail(): Response
+    {
+        return Inertia::render('MyPixDetail');
+    }
+    
 }
