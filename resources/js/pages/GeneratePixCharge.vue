@@ -10,20 +10,6 @@ import Divider from 'primevue/divider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/composables/useInitials';
 
-
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Tag from 'primevue/tag';
-import Checkbox from 'primevue/checkbox';
-import ModalDialog from "./ModalDialog.vue";
-
-
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Tag from 'primevue/tag';
-import Checkbox from 'primevue/checkbox';
-import ModalDialog from "./ModalDialog.vue";
-
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Gerar Cobrança Pix',
@@ -91,12 +77,9 @@ const anonymChecked = ref(false);
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-row items-center gap-4 rounded-xl p-4 overflow-x-auto">
-            <div class="grid h=full gen-pc-container auto-rows-min gap-4 md:grid-cols-3">
-        <div class="flex h-full flex-1 flex-row items-center gap-4 rounded-xl p-4 overflow-x-auto">
-            <div class="grid h=full gen-pc-container auto-rows-min gap-4 md:grid-cols-3">
+            <div class="grid h-full gen-pc-container auto-rows-min gap-4 md:grid-cols-3">
 
                 <div
-                    class="relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     class="relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <div class="card pix-select-card">
                         <MultiSelect 
@@ -169,10 +152,6 @@ const anonymChecked = ref(false);
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-center flex-col min-w-[15%]">
-                    <div
-                        class="status-card relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    </div>
                 <div class="flex justify-center flex-col min-w-[15%]">
                     <div
                         class="status-card relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">

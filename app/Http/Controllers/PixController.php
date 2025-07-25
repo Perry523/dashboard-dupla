@@ -128,7 +128,7 @@ class PixController extends Controller
             'generated' => (int) $stats->generated,
         ]);
     }
-
+    
     public function checkStatusPixMonitoring(string $token): Response
     {
         $pix = Pix::where('token', $token)->with('user')->firstOrFail();

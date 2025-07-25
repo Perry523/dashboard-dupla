@@ -19,6 +19,10 @@ Route::get('dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('GeneratePixCharge', [GeneratePixChargeController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('GeneratePixCharge');
+
 Route::get('MyPixes', [GeneratePixChargeController::class, 'browsePixes'])
     ->middleware(['auth', 'verified'])
     ->name('MyPixes');
@@ -30,7 +34,7 @@ Route::get('MyPixDetail', [GeneratePixChargeController::class, 'showPixDetail'])
 Route::get('UsersList', [GeneratePixChargeController::class, 'browseUsers'])
     ->middleware(['auth', 'verified'])
     ->name('UsersList');
-
+    
 Route::middleware(['auth'])->group(function () {
     Route::get('pix/generate', function () {
         return Inertia::render('Pix/Generate');
