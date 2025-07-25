@@ -75,12 +75,14 @@ class PixController extends Controller
     {
         $pix = Pix::where('token', $token)->with('user')->firstOrFail();
 
-        if ($pix->status === Pix::STATUS_GENERATED) {
+        if ($pix->isExpired() && $pix->status === Pix::STATUS_GENERATED) {
+            $pix->markAsExpired();
+        } elseif ($pix->status === Pix::STATUS_GENERATED) {
             $pix->markAsPaid();
         }
 
         return Inertia::render('Pix/Confirm', [
-            'pix' => $pix->fresh(['user']),
+            'pix' => $pix->fresh(),
         ]);
     }
 
@@ -128,18 +130,18 @@ class PixController extends Controller
             'generated' => (int) $stats->generated,
         ]);
     }
-    
+
     public function checkStatusPixMonitoring(string $token): Response
     {
         $pix = Pix::where('token', $token)->with('user')->firstOrFail();
+        
+        if ($pix->isExpired() && $pix->status === Pix::STATUS_GENERATED) {
+            $pix->markAsExpired();
+        } elseif ($pix->status === Pix::STATUS_PAID) {
+            return Inertia::render('Pix/Success', [
 
-        if ($pix->status === Pix::STATUS_GENERATED) {
-            $pix->markAsPaid();
+            ]);
         }
-
-        return Inertia::render('Pix/Confirm', [
-            'pix' => $pix->fresh(['user']),
-        ]);
     }
 
     public function storeList(array $pixList, string $userId, int $expirationTime)
