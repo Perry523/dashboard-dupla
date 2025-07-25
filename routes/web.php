@@ -19,10 +19,6 @@ Route::get('dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::get('GeneratePixCharge', [GeneratePixChargeController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('GeneratePixCharge');
-
 Route::get('MyPixes', [GeneratePixChargeController::class, 'browsePixes'])
     ->middleware(['auth', 'verified'])
     ->name('MyPixes');
