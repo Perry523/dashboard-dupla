@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PixController;
+use App\Http\Controllers\GeneratePixChargeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,6 +30,10 @@ Route::get('MyPixes', [GeneratePixChargeController::class, 'browsePixes'])
 Route::get('MyPixDetail', [GeneratePixChargeController::class, 'showPixDetail'])
     ->middleware(['auth', 'verified'])
     ->name('MyPixDetail');
+
+Route::get('UsersList', [GeneratePixChargeController::class, 'browseUsers'])
+    ->middleware(['auth', 'verified'])
+    ->name('UsersList');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('pix/generate', function () {

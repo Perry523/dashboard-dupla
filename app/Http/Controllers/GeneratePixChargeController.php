@@ -6,6 +6,7 @@ use App\Models\Pix;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
 
 class GeneratePixChargeController extends Controller
 {
@@ -25,12 +26,34 @@ class GeneratePixChargeController extends Controller
             ->take(10)
             ->get();
 
+        $usersList = $this->browseUsers();
+
         return Inertia::render('GeneratePixCharge', [
+            'usersList' => $usersList,
             'pixStats' => $pixStats,
             'recentPix' => $recentPix,
         ]);
     }
 
+    public function browseUsers()
+    {
+        $users = User::all()->toArray();
+        $usersListFilter = [];
+
+        foreach($users as $user){
+            $usersListFilter[] = [
+                'name' => $user["name"],
+                'items' =>[[
+                    'name' => $user["name"],
+                    'email' => $user["email"],
+                    'created_at' => $user["created_at"]
+                ]
+                    ]
+                ];
+        }
+        
+        return $usersListFilter;
+    }
 
     public function browsePixes(): Response
     {

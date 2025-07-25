@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, defineProps } from "vue";
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
@@ -17,6 +17,13 @@ import Tag from 'primevue/tag';
 import Checkbox from 'primevue/checkbox';
 import ModalDialog from "./ModalDialog.vue";
 
+
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Tag from 'primevue/tag';
+import Checkbox from 'primevue/checkbox';
+import ModalDialog from "./ModalDialog.vue";
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Gerar Cobrança Pix',
@@ -24,34 +31,22 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { getInitials } = useInitials();
-
+const props = defineProps({
+        usersList: Array // Declare 'categories' as an Array prop
+});
 const selectedUsers = ref();
-const groupedUsers = ref([
+const groupedUsers = ref(props.usersList);
+const groupedUsersModel = ref([
     {
-        label: 'Gean Jesus',
-        code: 'DE',
+        name: 'Gean Jesus',
         items: [
-            { name:'Gean Jesus' , label: 'geansantos2010@hotmail.com', value: 'geansantos2010@hotmail.com', created_at: '2025-07-16 04:25:05'},
-        ]
-    },
-    {
-        label: 'Vanessa Santos',
-        code: 'US',
-        items: [
-            { name:'Vanessa Santos' , label: 'vanessasilva_10@gmail.com', value: 'vanessasilva_10@gmail.com', created_at: '2025-07-17 14:25:05' },
-        ]
-    },
-    {
-        label: 'Jonathan Correia',
-        code: 'JP',
-        items: [
-            { name:'Jonathan Correia' , label: 'JohnTan.15@gmail.com', value: 'JohnTan.15@gmail.com', created_at: '2025-07-18 22:25:05' },
+            { email: 'geansantos2010@hotmail.com', created_at: '2025-07-16 04:25:05'},
         ]
     }
 ]);
-const severityValue = 'CREATED';
 
+const { getInitials } = useInitials();
+const severityValue = 'CREATED';
 const getSeverity = (severityVal: string) => {
     switch (severityVal) {
         case 'SEND':
@@ -97,22 +92,26 @@ const anonymChecked = ref(false);
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-row items-center gap-4 rounded-xl p-4 overflow-x-auto">
             <div class="grid h=full gen-pc-container auto-rows-min gap-4 md:grid-cols-3">
+        <div class="flex h-full flex-1 flex-row items-center gap-4 rounded-xl p-4 overflow-x-auto">
+            <div class="grid h=full gen-pc-container auto-rows-min gap-4 md:grid-cols-3">
 
                 <div
                     class="relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    class="relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <div class="card pix-select-card">
-                        <MultiSelect v-model="selectedUsers" :options="groupedUsers" optionLabel="label" filter
-                            optionGroupLabel="label" optionGroupChildren="items" display="chip"
+                        <MultiSelect 
+                        v-model="selectedUsers" :options="groupedUsers" optionLabel="email" filter
+                            optionGroupLabel="name" optionGroupChildren="items" display="chip"
                             placeholder="Selecione os usuários..." class=" pix-select-card w-full md:w-80">
                             <template #optiongroup="slotProps">
                                 <div class="flex pix-select-card items-center">
                                     <Avatar class="h-8 w-8 overflow-hidden rounded-lg mr-2">
-                                        <AvatarImage :src="''" :alt="slotProps.option.label" />
+                                        <AvatarImage :src="''" :alt="slotProps.option.name" />
                                         <AvatarFallback class="rounded-lg text-black dark:text-white">
-                                            {{ getInitials(slotProps.option.label) }}
+                                            {{ getInitials(slotProps.option.name) }}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div>{{ slotProps.option.label }}</div>
+                                    <div>{{ slotProps.option.name }}</div>
                                 </div>
                             </template>
                         </MultiSelect>
@@ -174,6 +173,10 @@ const anonymChecked = ref(false);
                     <div
                         class="status-card relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     </div>
+                <div class="flex justify-center flex-col min-w-[15%]">
+                    <div
+                        class="status-card relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    </div>
                 </div>
                 <Divider />
                 <div class="w-full flex flex-row items-center justify-evenly">
@@ -199,7 +202,7 @@ const anonymChecked = ref(false);
                                 </template>
                             </Column>
                             <Column field="name" header="Nome"></Column>
-                            <Column field="label" header="E-mail"></Column>
+                            <Column field="email" header="E-mail"></Column>
                             <Column header="Criado em" data-type="date">
                                 <template #body="data">
                                     {{ formatDate(data.data.created_at) }}
@@ -229,37 +232,10 @@ const anonymChecked = ref(false);
                             <Checkbox inputId="anonymCharge" v-model="anonymChecked" binary />
                             <label class="ml-5" for="anonymCharge">Cobrança anônima?</label>
                         </div>
-                        <ModalDialog />
+                        <ModalDialog :usersToSend="selectedUsers" />
                     </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
-
-
-<!--
-<template>
-    <Head title="GeneratePixCharge" />
-
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-            <div class="grid status-container auto-rows-min gap-4 md:grid-cols-3">
-<div class="status-card relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <h2 class="text-lg font-semibold">Pix CCharge Generation</h2>
-                </div>
-</div>
-</div>
-<div class="card flex justify-center">
-        <MultiSelect v-model="selectedCities" :options="groupedCities" optionLabel="label" filter optionGroupLabel="label" optionGroupChildren="items" display="chip" placeholder="Select Cities" class="w-full md:w-80">
-            <template #optiongroup="slotProps">
-                <div class="flex items-center">
-                    <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`flag flag-${slotProps.option.code.toLowerCase()} mr-2`" style="width: 18px" />
-                    <div>{{ slotProps.option.label }}</div>
-</div>
-</template>
-</MultiSelect>
-</div>
-</AppLayout>
-</template>
--->
