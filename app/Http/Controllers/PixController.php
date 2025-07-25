@@ -99,7 +99,7 @@ class PixController extends Controller
 
     public function show(string $token): JsonResponse
     {
-        $pix = Pix::where('token', $token)->firstOrFail();
+        $pix = Pix::where('token', $token)->with('user')->firstOrFail();
 
         if ($pix->user_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
