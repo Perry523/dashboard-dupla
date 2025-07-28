@@ -137,8 +137,8 @@ class PixController extends Controller
             $pix->markAsExpired();
         } elseif ($pix->status === Pix::STATUS_PAID) {
             return Inertia::render('Pix/Success', [
-
             ]);
+
         }
     }
 

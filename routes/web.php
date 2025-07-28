@@ -34,7 +34,7 @@ Route::get('MyPixDetail', [GeneratePixChargeController::class, 'showPixDetail'])
 Route::get('UsersList', [GeneratePixChargeController::class, 'browseUsers'])
     ->middleware(['auth', 'verified'])
     ->name('UsersList');
-    
+
 Route::middleware(['auth'])->group(function () {
     Route::get('pix/generate', function () {
         return Inertia::render('Pix/Generate');
