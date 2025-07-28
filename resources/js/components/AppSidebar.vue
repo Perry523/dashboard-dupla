@@ -19,6 +19,11 @@ const mainNavItems: NavItem[] = [
         href: '/GeneratePixCharge',
         icon: CircleDollarSign,
     },
+    {
+        title: 'Meus Pixes',
+        href: '/MyPixes',
+        icon: CircleDollarSign,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

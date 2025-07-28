@@ -2,6 +2,8 @@
 
 @import 'tw-animate-css';
 
+@import 'primeicons/primeicons.css';
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
@@ -307,4 +309,15 @@
 }
 .p-chip > svg{
     color: red;
+}
+
+.pix-detail-content{
+    min-width: 40%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: stretch;
+    justify-content: flex-start;
+    align-items: stretch;
 }

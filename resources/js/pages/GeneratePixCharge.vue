@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, defineProps } from "vue";
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
@@ -17,32 +17,58 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const { getInitials } = useInitials();
-
-const selectedCities = ref();
-const groupedCities = ref([
+const props = defineProps({
+        usersList: Array // Declare 'categories' as an Array prop
+});
+const selectedUsers = ref();
+const groupedUsers = ref(props.usersList);
+const groupedUsersModel = ref([
     {
-        label: 'Gean Jesus',
-        code: 'DE',
+        name: 'Gean Jesus',
         items: [
-            { label: 'geansantos2010@hotmail.com', value: 'geansantos2010@hotmail.com' },
-        ]
-    },
-    {
-        label: 'Vanessa Santos',
-        code: 'US',
-        items: [
-            { label: 'vanessasilva_10@gmail.com', value: 'vanessasilva_10@gmail.com' },
-        ]
-    },
-    {
-        label: 'Jonathan Correia',
-        code: 'JP',
-        items: [
-            { label: 'JohnTan.15@gmail.com', value: 'JohnTan.15@gmail.com' },
+            { email: 'geansantos2010@hotmail.com', created_at: '2025-07-16 04:25:05'},
         ]
     }
 ]);
+
+const { getInitials } = useInitials();
+const severityValue = 'CREATED';
+const getSeverity = (severityVal: string) => {
+    switch (severityVal) {
+        case 'SEND':
+            return 'info';
+
+        case 'EXPIRED':
+            return 'warn';
+
+        case 'ERROR':
+            return 'danger';
+
+        case 'CREATED':
+            return 'secondary';
+
+        case 'PAID':
+            return 'success';
+
+        default:
+            return undefined;
+    }
+};
+
+const formatDate = (value: string) => {
+    const dateObject: Date = new Date(value);
+    return dateObject.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
+
+const emailChecked = ref(false);
+const anonymChecked = ref(false);
+
 </script>
 
 <template>
@@ -50,24 +76,25 @@ const groupedCities = ref([
     <Head title="Geração de Pix" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-            <div class="grid gen-pc-container auto-rows-min gap-4 md:grid-cols-3">
+        <div class="flex h-full flex-1 flex-row items-center gap-4 rounded-xl p-4 overflow-x-auto">
+            <div class="grid h-full gen-pc-container auto-rows-min gap-4 md:grid-cols-3">
 
                 <div
-                    class="status-card relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    class="relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <div class="card pix-select-card">
-                        <MultiSelect v-model="selectedCities" :options="groupedCities" optionLabel="label" filter
-                            optionGroupLabel="label" optionGroupChildren="items" display="chip"
-                            placeholder="Selecione os Usuários" class=" pix-select-card w-full md:w-80">
+                        <MultiSelect 
+                        v-model="selectedUsers" :options="groupedUsers" optionLabel="email" filter
+                            optionGroupLabel="name" optionGroupChildren="items" display="chip"
+                            placeholder="Selecione os usuários..." class=" pix-select-card w-full md:w-80">
                             <template #optiongroup="slotProps">
                                 <div class="flex pix-select-card items-center">
                                     <Avatar class="h-8 w-8 overflow-hidden rounded-lg mr-2">
-                                        <AvatarImage :src="''" :alt="slotProps.option.label" />
+                                        <AvatarImage :src="''" :alt="slotProps.option.name" />
                                         <AvatarFallback class="rounded-lg text-black dark:text-white">
-                                            {{ getInitials(slotProps.option.label) }}
+                                            {{ getInitials(slotProps.option.name) }}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div>{{ slotProps.option.label }}</div>
+                                    <div>{{ slotProps.option.name }}</div>
                                 </div>
                             </template>
                         </MultiSelect>
@@ -125,38 +152,69 @@ const groupedCities = ref([
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-center flex-col">
-                    <button class="aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border hover:bg-teal-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 p-5">Enviar Cobrança</button>
+                <div class="flex justify-center flex-col min-w-[15%]">
+                    <div
+                        class="status-card relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    </div>
                 </div>
                 <Divider />
+                <div class="w-full flex flex-row items-center justify-evenly">
+                    <div>
+                        <DataTable :value="selectedUsers" tableStyle="min-width: 50rem">
+                            <template #empty>
+                                <div class="text-center">Selecione um usuário acima.</div>
+                            </template>
+                            <template #header>
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xl font-bold pl-3">Prontos para o envio:</span>
+                                    <Button icon="pi pi-refresh" rounded raised />
+                                </div>
+                            </template>
+                            <Column header="">
+                                <template #body="slotProps">
+                                    <Avatar class="h-8 w-8 overflow-hidden rounded-lg mr-2">
+                                        <AvatarImage :src="''" :alt="slotProps.data.name" />
+                                        <AvatarFallback class="rounded-lg text-black dark:text-white">
+                                            {{ getInitials(slotProps.data.name) }}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </template>
+                            </Column>
+                            <Column field="name" header="Nome"></Column>
+                            <Column field="email" header="E-mail"></Column>
+                            <Column header="Criado em" data-type="date">
+                                <template #body="data">
+                                    {{ formatDate(data.data.created_at) }}
+                                </template>
+                            </Column>
+                            <Column header="Status">
+                                <template #body="">
+                                    <Tag :value="severityValue" :severity="getSeverity(severityValue)" rounded />
+                                </template>
+                            </Column>
+                            <template #footer>
+                                <span class="pl-3">
+                                    Total: {{ selectedUsers ? selectedUsers.length : 0 }} envio(s).
+                                </span>
+
+                            </template>
+                        </DataTable>
+                    </div>
+                    <div>
+                        <div class="card flex flex-row justify-between rounded-xl border border-sidebar-border/70 dark:border-sidebar-border hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 p-2 mb-2"
+                            @click="emailChecked = !emailChecked">
+                            <Checkbox inputId="sendEmail" v-model="emailChecked" binary />
+                            <label class="ml-5" for="sendEmail">Enviar e-mail?</label>
+                        </div>
+                        <div class="card flex flex-row justify-between rounded-xl border border-sidebar-border/70 dark:border-sidebar-border hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 p-2 mb-5"
+                            @click="anonymChecked = !anonymChecked">
+                            <Checkbox inputId="anonymCharge" v-model="anonymChecked" binary />
+                            <label class="ml-5" for="anonymCharge">Cobrança anônima?</label>
+                        </div>
+                        <ModalDialog :usersToSend="selectedUsers" />
+                    </div>
+                </div>
             </div>
         </div>
     </AppLayout>
 </template>
-
-
-<!--
-<template>
-    <Head title="GeneratePixCharge" />
-
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-            <div class="grid status-container auto-rows-min gap-4 md:grid-cols-3">
-<div class="status-card relative aspect-video rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <h2 class="text-lg font-semibold">Pix CCharge Generation</h2>
-                </div>
-</div>
-</div>
-<div class="card flex justify-center">
-        <MultiSelect v-model="selectedCities" :options="groupedCities" optionLabel="label" filter optionGroupLabel="label" optionGroupChildren="items" display="chip" placeholder="Select Cities" class="w-full md:w-80">
-            <template #optiongroup="slotProps">
-                <div class="flex items-center">
-                    <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`flag flag-${slotProps.option.code.toLowerCase()} mr-2`" style="width: 18px" />
-                    <div>{{ slotProps.option.label }}</div>
-</div>
-</template>
-</MultiSelect>
-</div>
-</AppLayout>
-</template>
--->

@@ -6,6 +6,7 @@ use App\Models\Pix;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -53,7 +54,7 @@ class PixController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request): Response
     {
         $request->validate([
             'expires_in_minutes' => 'nullable|integer|min:1|max:1440',
@@ -61,14 +62,13 @@ class PixController extends Controller
 
         $expiresInMinutes = $request->input('expires_in_minutes', 10);
 
-        $pix = Pix::create([
-            'user_id' => Auth::id(),
-            'expires_at' => now()->addMinutes($expiresInMinutes),
-        ]);
-
-        $pix->sendCreationNotification();
-
-        return response()->json($pix->getShareableData());
+        $recordList = $this->storeList(
+            $request->usersDestination,
+            Auth::id(),
+            $expiresInMinutes
+        );
+        
+        return Inertia::render('GeneratePixCharge', [$recordList]);
     }
 
     public function confirm(string $token): Response
@@ -83,7 +83,7 @@ class PixController extends Controller
             'pix' => $pix->fresh(['user']),
         ]);
     }
-
+    
     public function qrcode(string $token)
     {
         $pix = Pix::where('token', $token)->firstOrFail();
@@ -99,7 +99,7 @@ class PixController extends Controller
 
     public function show(string $token): JsonResponse
     {
-        $pix = Pix::where('token', $token)->firstOrFail();
+        $pix = Pix::where('token', $token)->with('user')->firstOrFail();
 
         if ($pix->user_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
@@ -127,5 +127,33 @@ class PixController extends Controller
             'expired' => (int) $stats->expired,
             'generated' => (int) $stats->generated,
         ]);
+    }
+
+    public function checkStatusPixMonitoring(string $token): Response
+    {
+        $pix = Pix::where('token', $token)->with('user')->firstOrFail();
+
+        if ($pix->isExpired() && $pix->status === Pix::STATUS_GENERATED) {
+            $pix->markAsExpired();
+        } elseif ($pix->status === Pix::STATUS_PAID) {
+            return Inertia::render('Pix/Success', [
+            ]);
+
+        }
+    }
+
+    public function storeList(array $pixList, string $userId, int $expirationTime)
+    {
+        $createdPixes = [];
+        foreach($pixList as $emailList){
+            $pix = Pix::create([
+            'user_id' =>$userId,
+            'expires_at' => now()->addMinutes($expirationTime),
+        ]);
+
+        $pix->sendCreationNotification();
+        $createdPixes[]=$pix->getShareableData();
+        }
+        return $createdPixes;
     }
 }
