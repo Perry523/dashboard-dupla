@@ -11,12 +11,19 @@ export interface userSelected{
     created_at: string
 }
 
+export interface PixData{
+    pixDescription: string,
+    pixValue: number,
+}
+
 interface Props {
-    usersToSend?: Array<userSelected>;
+    usersToSend?: Array<userSelected>,
+    pixData?: PixData
 }
 
 const props = withDefaults(defineProps<Props>(), {
   usersToSend: () =>[],
+  pixData: undefined
 });
 
 const visible = ref(false);
@@ -30,12 +37,15 @@ selecteds.forEach(el => {
 if(emails.length==0) emails.push("");
 return emails;
 }
+const pixDataToSend = toRaw(props.pixData);
 
 const loadCreatePixes = () => {
     loading.value = true;
     const emailList = getEmailsList(toRaw(props.usersToSend));
     const form = useForm({
-        usersDestination: emailList
+        usersDestination: emailList,
+        pixDataValue: pixDataToSend?.pixValue,
+        pixDataDescription: pixDataToSend?.pixDescription,
     });
     form.post(route('pix.store'), {
         onFinish: () => {
