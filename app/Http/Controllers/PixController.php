@@ -145,15 +145,17 @@ class PixController extends Controller
     public function storeList(array $pixList, string $userId, int $expirationTime)
     {
         $createdPixes = [];
-        foreach($pixList as $emailList){
+        foreach($pixList as $email){
             $pix = Pix::create([
             'user_id' =>$userId,
-            'expires_at' => now()->addMinutes($expirationTime),
+            'expires_at' => now()->addMinutes($expirationTime)
+            ,'user_destination_email' => $email
         ]);
 
         $pix->sendCreationNotification();
         $createdPixes[]=$pix->getShareableData();
         }
+
         return $createdPixes;
     }
 }

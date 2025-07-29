@@ -2,10 +2,20 @@
 import AppStatusResume from './AppStatusResume.vue';
 import { receiveStatusResume } from './index';
 
+interface Props {
+    usersCount?: Number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  usersCount: () => 0,
+});
+
 const statusType = 'USERS', // This can be 'PIXES', 'USERS', or 'MSELAPSED'
 iconName = 'Users';
 
-let usersResumeValue = receiveStatusResume(statusType).toString();
+/* let usersResumeValue = receiveStatusResume(statusType).toString(); */
+
+let usersResumeValue = props.usersCount.toString();
 
 </script>
 

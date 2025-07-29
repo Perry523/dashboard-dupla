@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, toRaw } from "vue";
+import { ref, toRaw } from "vue";
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import { Link,useForm } from '@inertiajs/vue3';
@@ -7,36 +7,45 @@ import SuccessScreen from "./SuccessScreen.vue";
 
 export interface userSelected{
     name: string,
-    label: string,
-    value: string,
+    email: string,
     created_at: string
 }
 
+export interface PixData{
+    pixDescription: string,
+    pixValue: number,
+}
+
 interface Props {
-    usersToSend?: Array<userSelected>;
+    usersToSend?: Array<userSelected>,
+    pixData?: PixData
 }
 
 const props = withDefaults(defineProps<Props>(), {
   usersToSend: () =>[],
+  pixData: undefined
 });
-const uToSend = computed(() => props.usersToSend);
 
 const visible = ref(false);
 const loading = ref(false);
 
 const getEmailsList = (selecteds: Array<userSelected>) => {
-    const emails = [""];
-   selecteds.forEach(el => {
-        emails.push(el.value);
-    });
-    return emails;
+const emails: string[] = [];
+selecteds.forEach(el => {
+    emails.push(el.email);
+});
+if(emails.length==0) emails.push("");
+return emails;
 }
+const pixDataToSend = toRaw(props.pixData);
 
 const loadCreatePixes = () => {
     loading.value = true;
-
+    const emailList = getEmailsList(toRaw(props.usersToSend));
     const form = useForm({
-        usersDestination: getEmailsList(toRaw(props.usersToSend))
+        usersDestination: emailList,
+        pixDataValue: pixDataToSend?.pixValue,
+        pixDataDescription: pixDataToSend?.pixDescription,
     });
     form.post(route('pix.store'), {
         onFinish: () => {
