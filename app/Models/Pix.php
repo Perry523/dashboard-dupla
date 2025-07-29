@@ -22,6 +22,7 @@ class Pix extends Model
         'token',
         'status',
         'expires_at',
+        'user_destination_email'
     ];
 
     protected $casts = [
@@ -131,6 +132,7 @@ class Pix extends Model
             'qr_code_base64' => $this->getQrCodeBase64(),
             'expires_at' => $this->expires_at,
             'status' => $this->status,
+            'user_destination_email' => $this->user_destination_email,
         ];
     }
 }
