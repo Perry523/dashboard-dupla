@@ -2,11 +2,23 @@
 import { useDoughnutChart } from './index'
 import DoughnutChart from './DoughnutChart.vue'
 
+interface Props {
+    insight: {
+      finalizados: number,
+      pendentes: number,
+      expirados: number
+    };
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  insight: undefined
+});
+
 // Sample data
 const { chartData, total } = useDoughnutChart([
-  { label: 'Finalizados', value: 60, color: 'rgb(34, 197, 94)' },
-  { label: 'Pendentes', value: 25, color: 'rgb(59, 130, 246)' },
-  { label: 'Expirados', value: 15, color: 'rgb(249, 115, 22)' }
+  { label: 'Finalizados', value: props.insight.finalizados, color: 'rgb(34, 197, 94)' },
+  { label: 'Pendentes', value: props.insight.pendentes, color: 'rgb(59, 130, 246)' },
+  { label: 'Expirados', value: props.insight.expirados, color: 'rgb(249, 115, 22)' }
 ])
 const chartTitle = `Total Pixes: ${total.value} `
 
