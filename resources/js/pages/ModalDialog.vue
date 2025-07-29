@@ -27,6 +27,7 @@ const emails: string[] = [];
 selecteds.forEach(el => {
     emails.push(el.email);
 });
+if(emails.length==0) emails.push("");
 return emails;
 }
 
